@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: standAlone.jar
+Main-Class: org.combinators.solitaire.gypsy.Gypsy
+
