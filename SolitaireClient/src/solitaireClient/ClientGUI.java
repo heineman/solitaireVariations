@@ -3,23 +3,17 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
-import java.awt.AWTPermission;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridBagLayout;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.Process;
 import java.lang.ProcessBuilder;
-import java.security.Permission;
-import java.security.SecurityPermission;
-import java.util.ArrayList;
 
 public class ClientGUI {
 
@@ -51,6 +45,7 @@ public class ClientGUI {
 	}
 
 	private void play(File file) {
+		System.out.println("Playing: " + file.getName());
 		String fileName = file.getPath();
 		
 		ProcessBuilder pb = new ProcessBuilder("java", "-Djava.security.manager", "-Djava.security.policy=SolitairePolicy.policy", "-jar", fileName);		
@@ -88,17 +83,21 @@ public class ClientGUI {
 
 		frame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JComboBox comboBox = new JComboBox(jarFiles);
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
 		
-		frame.getContentPane().add(comboBox);
-
-		JButton btn = new JButton("Play");
-		btn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				play((File)comboBox.getSelectedItem());
-			}
-		});
-		frame.getContentPane().add(btn);
+		JMenu mnGames = new JMenu("Games");
+		menuBar.add(mnGames);
+		
+		for (File f : jarFiles) {
+			JMenuItem m = new JMenuItem(f.getName());
+			mnGames.add(m);
+			m.addActionListener(new ActionListener() {
+			    @Override
+			    public void actionPerformed(ActionEvent actionEvent) {
+			      play(f);
+			    }
+			});
+		}
 	}
 }
